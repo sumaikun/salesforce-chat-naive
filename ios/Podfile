@@ -1,0 +1,41 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/goinstant/pods-specs-public'
+
+platform :ios, '11.0'
+
+target 'fleetTest' do
+  config = use_native_modules!
+  pod 'ServiceSDK/Chat'
+
+  use_react_native!(:path => config["reactNativePath"])
+
+  target 'fleetTestTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable these next few lines.
+  use_flipper!({ 'Flipper' => '0.88.0', 'Flipper-Folly' => '2.6.7' })
+  post_install do |installer|
+    flipper_post_install(installer)
+    installer.pods_project.targets.each do |t|
+      t.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.3'
+      end
+    end
+  end
+end
+
+target 'fleetTest-tvOS' do
+  # Pods for fleetTest-tvOS
+
+  target 'fleetTest-tvOSTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+end
